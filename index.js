@@ -1,21 +1,23 @@
-const http = require('http')
-const httpProxy = require('http-proxy');
-const proxy = httpProxy.createProxyServer({});
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware')
+const app = express();
+const port = 5000;
 
-const server = http.createServer((req, res) => {
-  proxy.web(req, res, { target: 'http://localhost:4000' })
-})
+app.use(express.static(__dirname + '/client/dist'))
 
-const server = http.createServer((req, res) => {
-  proxy.web(req, res, { target: 'http://localhost:3141' })
-})
+app.use('/checkout', createProxyMiddleware({
+  target: 'http://localhost:4000',
+  changeOrigin: true
+}))
 
-const server = http.createServer((req, res) => {
-  proxy.web(req, res, { target: 'http://localhost:3000' })
-})
+app.use('/explorethis', createProxyMiddleware({
+  target: 'http://localhost:3141',
+  changeOrigin: true
+}))
 
-const server = http.createServer((req, res) => {
-  proxy.web(req, res, { target: 'http://localhost:3003' })
-})
+app.use('/photoGallery', createProxyMiddleware({
+  target: 'http://localhost:3003',
+  changeOrigin: true
+}))
 
-server.listen(80);
+app.listen(port)
