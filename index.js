@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const app = express();
 const port = 5000;
 
-app.use(express.static(__dirname + '/client/dist'))
+app.use('/:productId', express.static(__dirname + '/client/dist'))
 
 app.use('/checkout', createProxyMiddleware({
   target: 'http://localhost:4000',
